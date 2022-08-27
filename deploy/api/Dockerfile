@@ -5,12 +5,14 @@ ENV NODE_ENV build
 # Create app directory
 WORKDIR /usr/src/app
 
+USER root
+
 RUN apt-get update
 
 RUN apt-get install python3 -y
 
 # Bundle app source
-COPY . .
+COPY ../.. .
 
 RUN npm install --force \
     && npm prune --production
@@ -18,27 +20,29 @@ RUN npm install --force \
 # ---
 FROM node:14-slim as production
 
-LABEL "nick"="cc"
-
 ENV NODE_ENV production
 
 WORKDIR /usr/src/app
 
+USER root
+
 RUN apt-get update
 
-RUN apt-get install rsync -y
+RUN apt-get -y install rsync
+
+RUN apt-get -y install unar
 
 COPY package*.json ./
 
 RUN npm install --only=production --force
 
-COPY --chown=node:node . .
+COPY --chown=node:node ../.. .
 
 COPY --chown=node:node --from=builder /usr/src/app/dist ./dist
 
 # friends don’t let friends run containers as root!
 USER node
 
-EXPOSE 3333 3334
+EXPOSE 3333 3333
 
 CMD ["node", "dist/apps/api/main.js"]

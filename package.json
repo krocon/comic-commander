@@ -6,7 +6,21 @@
   "scripts": {
     "npm:publish": "npm publish",
     "run:api": "node apps/api/main.js",
-    "run:comiccommander": "node apps/comiccommander/main.js"
+    "run:comiccommander": "node apps/comiccommander/main.js",
+    "docker:kill": "docker kill comic-commander",
+    "docker:kill2": "docker kill $(docker ps | grep  ' krocon/comic-commander ' | awk '{ print $1 }') ",
+    "docker:container-ls": "docker container ls",
+    "docker:container-remove": "docker container rm cc && docker image rm krocon/comic-commander -f",
+    "docker:images": "docker images",
+    "docker:image-remove": "docker image rm krocon/comic-commander -f",
+    "docker:build": "npm run build:update-version && docker build . -t krocon/comic-commander",
+    "docker:deploy": "docker push krocon/comic-commander:latest",
+    "docker:build-deploy": "npm run docker:build && npm run docker:deploy",
+    "docker:run": "docker run -p 3333:3333 -p 3334:3334 -v /Users/marckronberg/Comics.nosync:/comics -v /Users/marckronberg/Temp.nosync:/comictemp --name cc -d krocon/comic-commander",
+    "docker-restart": "docker container start cc",
+    "docker:print-container-id": "docker ps | grep  ' krocon/comic-commander ' | awk '{ print $1 }'",
+    "docker:logs": "docker logs $(docker ps | grep  ' krocon/comic-commander ' | awk '{ print $1 }') ",
+    "docker:logs-f": "docker logs $(docker ps | grep  ' krocon/comic-commander ' | awk '{ print $1 }') -f"
   },
   "dependencies": {
     "@angular/animations": "14.1.2",

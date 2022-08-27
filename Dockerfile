@@ -1,4 +1,21 @@
+FROM node:14 as builder
 
+ENV NODE_ENV build
+
+# Create app directory
+WORKDIR /usr/src/app
+
+RUN apt-get update
+
+RUN apt-get install python3 -y
+
+# Bundle app source
+COPY . .
+
+RUN npm install --force \
+    && npm prune --production
+
+# ---
 FROM node:14-slim as production
 
 LABEL "nick"="cc"

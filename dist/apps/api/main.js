@@ -1799,6 +1799,7 @@ function bootstrapStaticAssets(app, config) {
     });
     app.useStaticAssets(config.tempDir);
     common_1.Logger.log(`    added: ${config.tempDir}`);
+    if (false) {}
 }
 bootstrap();
 

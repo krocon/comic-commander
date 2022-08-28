@@ -1,6 +1,6 @@
 {
   "name": "comic-commander",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "license": "MIT",
   "private": false,
   "scripts": {
@@ -17,14 +17,14 @@
     "docker:logs-f:web": "docker logs $(docker ps | grep  ' comic-commander_web' | awk '{ print $1 }') -f",
 
     "docker:container-ls": "docker container ls",
-    "docker:container-remove": "docker container rm cc && docker image rm krocon/comic-commander -f",
+    "docker:container-remove": "docker image rm comic-commander_api -f && docker image rm comic-commander_web -f",
 
     "docker:images": "docker images",
-    "docker:image-remove": "docker image rm krocon/comic-commander_api -f && docker image rm krocon/comic-commander_api -f",
+    "docker:image-remove": "docker image rm comic-commander_api -f && docker image rm comic-commander_web -f",
 
     "docker:compose:build": "docker compose build",
-    "docker:compose:build:up": "docker compose up",
-    "docker:compose:up": "docker compose up --build"
+    "docker:compose:up": "docker compose up",
+    "docker:compose:up-and-build": "docker compose up --build"
   },
   "dependencies": {
     "@angular/animations": "14.1.2",

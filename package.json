@@ -19,7 +19,7 @@
     "docker:build-deploy": "npm run docker:build && npm run docker:deploy",
     "docker:docker:deploy": "npm run docker:deploy",
     "docker:run": "docker run -p 3333:3333 -p 3334:3334 -v /Users/marckronberg/Comics.nosync:/comics -v /Users/marckronberg/Temp.nosync:/comictemp --name cc -d krocon/comic-commander",
-    "docker:compose:build:up": "docker compose up --build -v /Users/marckronberg/Comics.nosync:/comics -v /Users/marckronberg/Temp.nosync:/comictemp --name cc -d krocon/comic-commander",
+    "docker:compose:build:up": "docker compose up --build",
     "docker-restart": "docker container start cc",
     "docker:print-container-id": "docker ps | grep  ' krocon/comic-commander ' | awk '{ print $1 }'",
     "docker:logs": "docker logs $(docker ps | grep  ' krocon/comic-commander ' | awk '{ print $1 }') ",

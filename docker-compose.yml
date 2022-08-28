@@ -16,7 +16,7 @@ services:
     build:
       context: .
       dockerfile: deploy/web/Dockerfile
-    container_name: comiccommander
+    container_name: comic-commander
     command: nginx-debug -g 'daemon off;'
     ports:
       - '4200:80'

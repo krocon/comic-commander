@@ -1799,11 +1799,11 @@ function bootstrapStaticAssets(app, config) {
     });
     app.useStaticAssets(config.tempDir);
     common_1.Logger.log(`    added: ${config.tempDir}`);
-    if (fs.existsSync(path.resolve(__dirname, "../comiccommander/index.html"))) {
-        const ff = path.resolve(__dirname, "../comiccommander");
-        app.useStaticAssets(ff);
-        common_1.Logger.log(`    added: ${ff}`);
-    }
+    // if (fs.existsSync(path.resolve(__dirname, "../comiccommander/index.html"))) {
+    //   const ff = path.resolve(__dirname, "../comiccommander")
+    //   app.useStaticAssets(ff);
+    //   Logger.log(`    added: ${ff}`);
+    // }
 }
 bootstrap();
 

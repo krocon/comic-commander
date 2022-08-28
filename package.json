@@ -4,7 +4,6 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "postinstall": "postinstall.js",
     "npm:publish": "npm publish",
     "run:api": "node apps/api/main.js",
     "run:comiccommander": "node apps/comiccommander/main.js",

@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: deploy/api/Dockerfile
-    container_name: comic-commander_api
+    container_name: api
     ports:
       - '3333:3333'
     volumes:
@@ -16,7 +16,7 @@ services:
     build:
       context: .
       dockerfile: deploy/web/Dockerfile
-    container_name: comic-commander_web
+    container_name: web
     command: nginx-debug -g 'daemon off;'
     ports:
       - '4200:80'

@@ -1,6 +1,6 @@
 {
   "name": "comic-commander",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "license": "MIT",
   "private": false,
   "scripts": {
@@ -8,18 +8,16 @@
     "run:api": "node apps/api/main.js",
     "run:comiccommander": "node apps/comiccommander/main.js",
 
-    "docker:print-container-id:api": "docker ps | grep  ' comic-commander_api' | awk '{ print $1}'",
-    "docker:print-container-id:web": "docker ps | grep  ' comic-commander_web' | awk '{ print $1}'",
-    "docker:logs:api": "docker logs $(docker ps | grep  ' comic-commander_api' | awk '{ print $1 }') ",
-    "docker:logs:web": "docker logs $(docker ps | grep  ' comic-commander_web' | awk '{ print $1 }') ",
-    "docker:logs-f:api": "docker logs $(docker ps | grep  ' comic-commander_api' | awk '{ print $1 }') -f",
-    "docker:logs-f:web": "docker logs $(docker ps | grep  ' comic-commander_web' | awk '{ print $1 }') -f",
+    "docker:logs:api": "docker logs $(docker ps | grep  ' api' | awk '{ print $1 }') ",
+    "docker:logs:web": "docker logs $(docker ps | grep  ' web' | awk '{ print $1 }') ",
+    "docker:logs-f:api": "docker logs $(docker ps | grep  ' api' | awk '{ print $1 }') -f",
+    "docker:logs-f:web": "docker logs $(docker ps | grep  ' web' | awk '{ print $1 }') -f",
 
     "docker:container-ls": "docker container ls",
-    "docker:container-remove": "docker image rm comic-commander_api -f && docker image rm comic-commander_web -f",
+    "docker:container-remove": "docker image rm api -f && docker image rm web -f",
 
     "docker:images": "docker images",
-    "docker:image-remove": "docker image rm comic-commander_api -f && docker image rm comic-commander_web -f",
+    "docker:image-remove": "docker image rm api -f && docker image rm web -f",
 
     "docker:compose:build": "docker compose build",
     "docker:compose:up": "docker compose up",

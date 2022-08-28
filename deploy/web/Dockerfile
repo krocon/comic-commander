@@ -1,3 +1,4 @@
+#FROM nginx
 FROM nginxinc/nginx-unprivileged
 
 #RUN rm /etc/nginx/conf.d/default.conf

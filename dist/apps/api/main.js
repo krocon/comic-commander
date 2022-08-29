@@ -1305,7 +1305,7 @@ exports.IndexAndName = IndexAndName;
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
-var _a, _b, _c, _d, _e;
+var AppViewerController_1, _a, _b, _c, _d, _e;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AppViewerController = void 0;
 const tslib_1 = __webpack_require__("tslib");
@@ -1317,7 +1317,7 @@ const path = __webpack_require__("path");
 const app_unpack_service_1 = __webpack_require__("./apps/api/src/app/common/unpack/app-unpack.service.ts");
 const app_file_util_service_1 = __webpack_require__("./apps/api/src/app/common/file/app-file-util.service.ts");
 const fs = __webpack_require__("fs-extra");
-let AppViewerController = class AppViewerController {
+let AppViewerController = AppViewerController_1 = class AppViewerController {
     constructor(appUnpackService, appConfigService, appFileUtilService) {
         this.appUnpackService = appUnpackService;
         this.appConfigService = appConfigService;
@@ -1328,27 +1328,31 @@ let AppViewerController = class AppViewerController {
     getHash(body) {
         const category = this.config.categories[body.categoryIndex];
         const source = path.join(category.baseDir, body.file);
-        return (0, crypto_1.createHash)('md5', {})
+        return (0, crypto_1.createHash)("md5", {})
             .update(source)
-            .digest('base64url');
+            .digest("base64url");
     }
     createView(body) {
         const category = this.config.categories[body.categoryIndex];
         const source = path.join(category.baseDir, body.file);
-        const h = (0, crypto_1.createHash)('md5', {})
+        const h = (0, crypto_1.createHash)("md5", {})
             .update(source)
-            .digest('base64url');
+            .digest("base64url");
         if (this.unpackingHashes.get(h) === true) {
             return []; // we are unpacking this folder at the moment, so we will send an empty array. Client must recall again.
         }
         const targetDir = path.join(this.config.tempDir, h);
-        const unpackNecessary = body.forced || !fs.existsSync(targetDir);
+        let targetExists = fs.existsSync(targetDir);
+        let targetTmpExists = fs.existsSync(targetDir + AppViewerController_1.tmpSuffix);
+        const unpackNecessary = body.forced || (!targetExists && !targetTmpExists);
         if (unpackNecessary) {
             this.unpackingHashes.set(h, true);
             this.doUnpack(source, targetDir);
+            targetExists = fs.existsSync(targetDir);
+            targetTmpExists = fs.existsSync(targetDir + AppViewerController_1.tmpSuffix);
         }
-        this.unpackingHashes.set(h, false);
-        if (fs.existsSync(targetDir)) {
+        if (targetExists && !targetTmpExists) {
+            this.unpackingHashes.set(h, false);
             return this.readFiles(targetDir, h);
         }
         return [];
@@ -1362,40 +1366,45 @@ let AppViewerController = class AppViewerController {
     }
     readFiles(targetDir, h) {
         return this.appFileUtilService
-            .readDirs(targetDir, ['.jpg', '.jpeg'])
+            .readDirs(targetDir, [".jpg", ".jpeg"])
             .sort()
             .map(f => path.join(h, f));
     }
     doUnpack(source, targetDir) {
-        this.appUnpackService
-            .unpackSync(source, {
-            targetDir,
-            forceDirectory: false
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            const tmpTarget = targetDir + AppViewerController_1.tmpSuffix;
+            yield this.appUnpackService
+                .unpackSync(source, {
+                targetDir: tmpTarget,
+                forceDirectory: false
+            });
+            fs.renameSync(tmpTarget, targetDir);
         });
     }
 };
+AppViewerController.tmpSuffix = ".tmp";
 tslib_1.__decorate([
-    (0, common_1.Post)('hash'),
+    (0, common_1.Post)("hash"),
     tslib_1.__param(0, (0, common_1.Body)()),
     tslib_1.__metadata("design:type", Function),
     tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof config_1.ViewBodyData !== "undefined" && config_1.ViewBodyData) === "function" ? _a : Object]),
     tslib_1.__metadata("design:returntype", String)
 ], AppViewerController.prototype, "getHash", null);
 tslib_1.__decorate([
-    (0, common_1.Post)('new'),
+    (0, common_1.Post)("new"),
     tslib_1.__param(0, (0, common_1.Body)()),
     tslib_1.__metadata("design:type", Function),
     tslib_1.__metadata("design:paramtypes", [typeof (_b = typeof config_1.ViewBodyData !== "undefined" && config_1.ViewBodyData) === "function" ? _b : Object]),
     tslib_1.__metadata("design:returntype", Array)
 ], AppViewerController.prototype, "createView", null);
 tslib_1.__decorate([
-    (0, common_1.Get)('read/:hash'),
+    (0, common_1.Get)("read/:hash"),
     tslib_1.__param(0, (0, common_1.Param)("hash")),
     tslib_1.__metadata("design:type", Function),
     tslib_1.__metadata("design:paramtypes", [String]),
     tslib_1.__metadata("design:returntype", Array)
 ], AppViewerController.prototype, "readView", null);
-AppViewerController = tslib_1.__decorate([
+AppViewerController = AppViewerController_1 = tslib_1.__decorate([
     (0, common_1.Controller)("view"),
     tslib_1.__metadata("design:paramtypes", [typeof (_c = typeof app_unpack_service_1.AppUnpackService !== "undefined" && app_unpack_service_1.AppUnpackService) === "function" ? _c : Object, typeof (_d = typeof app_config_service_1.AppConfigService !== "undefined" && app_config_service_1.AppConfigService) === "function" ? _d : Object, typeof (_e = typeof app_file_util_service_1.AppFileUtilService !== "undefined" && app_file_util_service_1.AppFileUtilService) === "function" ? _e : Object])
 ], AppViewerController);

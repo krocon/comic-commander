@@ -1322,7 +1322,6 @@ let AppViewerController = AppViewerController_1 = class AppViewerController {
         this.appUnpackService = appUnpackService;
         this.appConfigService = appConfigService;
         this.appFileUtilService = appFileUtilService;
-        this.unpackingHashes = new Map();
         this.config = appConfigService.getConfig();
     }
     getHash(body) {
@@ -1338,21 +1337,21 @@ let AppViewerController = AppViewerController_1 = class AppViewerController {
         const h = (0, crypto_1.createHash)("md5", {})
             .update(source)
             .digest("base64url");
-        if (this.unpackingHashes.get(h) === true) {
-            return []; // we are unpacking this folder at the moment, so we will send an empty array. Client must recall again.
-        }
         const targetDir = path.join(this.config.tempDir, h);
         let targetExists = fs.existsSync(targetDir);
         let targetTmpExists = fs.existsSync(targetDir + AppViewerController_1.tmpSuffix);
         const unpackNecessary = body.forced || (!targetExists && !targetTmpExists);
         if (unpackNecessary) {
-            this.unpackingHashes.set(h, true);
-            this.doUnpack(source, targetDir);
+            try {
+                this.doUnpack(source, targetDir);
+            }
+            catch (e) {
+                console.error(e);
+            }
             targetExists = fs.existsSync(targetDir);
             targetTmpExists = fs.existsSync(targetDir + AppViewerController_1.tmpSuffix);
         }
         if (targetExists && !targetTmpExists) {
-            this.unpackingHashes.set(h, false);
             return this.readFiles(targetDir, h);
         }
         return [];
@@ -1378,6 +1377,9 @@ let AppViewerController = AppViewerController_1 = class AppViewerController {
                 targetDir: tmpTarget,
                 forceDirectory: false
             });
+            if (fs.existsSync(targetDir)) {
+                fs.removeSync(targetDir);
+            }
             fs.renameSync(tmpTarget, targetDir);
         });
     }
